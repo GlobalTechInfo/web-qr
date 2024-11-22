@@ -5,7 +5,7 @@ const app = express();
 
 
 
-
+const { upload } = require('./mega');
 const pino = require("pino");
 let { toBuffer } = require("qrcode");
 const path = require('path');
@@ -36,8 +36,8 @@ const MESSAGE = process.env.MESSAGE ||  `
 
 
 
-if (fs.existsSync('./auth_info_baileys')) {
-    fs.emptyDirSync(__dirname + '/auth_info_baileys');
+if (fs.existsSync('./session')) {
+    fs.emptyDirSync(__dirname + '/session');
   };
   
   app.use("/", async(req, res) => {
@@ -45,12 +45,12 @@ if (fs.existsSync('./auth_info_baileys')) {
   const { default: SuhailWASocket, useMultiFileAuthState, Browsers, delay,DisconnectReason, makeInMemoryStore, } = require("@whiskeysockets/baileys");
   const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
   async function SUHAIL() {
-    const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys')
+    const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/session')
     try {
       let Smd =SuhailWASocket({ 
         printQRInTerminal: false,
         logger: pino({ level: "silent" }), 
-        browser: Browsers.baileys("Desktop"),
+        browser: Browsers.windows("Chrome"),
         auth: state 
         });
 
@@ -69,9 +69,21 @@ if (fs.existsSync('./auth_info_baileys')) {
 //===============================  SESSION ID    ===========================================
 //===========================================================================================
 
-          let CREDS = fs.readFileSync(__dirname + '/auth_info_baileys/creds.json')
-          var Scan_Id = Buffer.from(CREDS).toString('base64')
-         // res.json({status:true,Scan_Id })
+          function randomMegaId(length = 6, numberLength = 4) {
+                      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                      let result = '';
+                      for (let i = 0; i < length; i++) {
+                      result += characters.charAt(Math.floor(Math.random() * characters.length));
+                        }
+                       const number = Math.floor(Math.random() * Math.pow(10, numberLength));
+                        return `${result}${number}`;
+                        }
+
+                        const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
+
+                        const string_session = mega_url.replace('https://mega.nz/file/', '');
+
+                        const Scan_Id = string_session;
           console.log(`
 ====================  SESSION ID  ==========================                   
 SESSION-ID ==> ${Scan_Id}
@@ -82,7 +94,7 @@ SESSION-ID ==> ${Scan_Id}
           let msgsss = await Smd.sendMessage(user, { text:  Scan_Id });
           await Smd.sendMessage(user, { text: MESSAGE } , { quoted : msgsss });
           await delay(1000);
-          try{ await fs.emptyDirSync(__dirname+'/auth_info_baileys'); }catch(e){}
+          try{ await fs.emptyDirSync(__dirname+'/session'); }catch(e){}
 
 
         }
@@ -116,7 +128,7 @@ SESSION-ID ==> ${Scan_Id}
       });
     } catch (err) {
         console.log(err);
-       await fs.emptyDirSync(__dirname+'/auth_info_baileys'); 
+       await fs.emptyDirSync(__dirname+'/session'); 
     }
   }
 
@@ -129,7 +141,7 @@ SESSION-ID ==> ${Scan_Id}
 
   SUHAIL().catch(async(err) => {
     console.log(err)
-    await fs.emptyDirSync(__dirname+'/auth_info_baileys'); 
+    await fs.emptyDirSync(__dirname+'/session'); 
 
 
     //// MADE WITH 
