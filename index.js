@@ -50,7 +50,7 @@ if (fs.existsSync('./session')) {
       let Smd =SuhailWASocket({ 
         printQRInTerminal: false,
         logger: pino({ level: "silent" }), 
-        browser: Browsers.windows("Chrome"),
+        browser: Browsers.baileys("Chrome"),
         auth: state 
         });
 
