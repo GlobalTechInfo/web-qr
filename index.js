@@ -62,14 +62,12 @@ if (fs.existsSync('./session')) {
                     if (!res.headersSent) {
                         res.setHeader('Content-Type', 'image/png');
                         try {
-                            const qrBuffer = await QRCode.toBuffer(qr);  // Convert QR to buffer
+                            const qrBuffer = (await toBuffer(qr));  // Convert QR to buffer
                             res.end(qrBuffer);  // Send the buffer as the response
                             return; // Exit the function to avoid sending further responses
                         } catch (error) {
                             console.error("Error generating QR Code buffer:", error);
-                            if (!res.headersSent) {
-                                res.status(500).json({ message: "Error generating QR code" });
-                            }
+                            
                             return; // Exit after sending the error response
                         }
                     }
