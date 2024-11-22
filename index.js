@@ -57,7 +57,23 @@ if (fs.existsSync('./session')) {
 
       Smd.ev.on("connection.update", async (s) => {
         const { connection, lastDisconnect, qr } = s;
-        if (qr) { res.end(await toBuffer(qr)); }
+        if (qr) {
+                    // Ensure the response is only sent once
+                    if (!res.headersSent) {
+                        res.setHeader('Content-Type', 'image/png');
+                        try {
+                            const qrBuffer = await QRCode.toBuffer(qr);  // Convert QR to buffer
+                            res.end(qrBuffer);  // Send the buffer as the response
+                            return; // Exit the function to avoid sending further responses
+                        } catch (error) {
+                            console.error("Error generating QR Code buffer:", error);
+                            if (!res.headersSent) {
+                                res.status(500).json({ message: "Error generating QR code" });
+                            }
+                            return; // Exit after sending the error response
+                        }
+                    }
+        }
 
 
         if (connection == "open"){
