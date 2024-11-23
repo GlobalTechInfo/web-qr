@@ -1,7 +1,7 @@
 
 const express = require("express");
 const app = express();
-
+const { exec } = require("child_process");
 
 
 
@@ -14,13 +14,12 @@ const { Boom } = require("@hapi/boom");
 const PORT = process.env.PORT ||  5000
 const MESSAGE = process.env.MESSAGE ||  `
 ╔════◇
-║ *『 WAOW YOU CHOOSE SUHAIL-MD 』*
+║ *『 WAOW YOU CHOOSE ULTRA-MD 』*
 ║ _You complete first step to making Bot._
 ╚════════════════════════╝
 ╔═════◇
 ║  『••• 𝗩𝗶𝘀𝗶𝘁 𝗙𝗼𝗿 𝗛𝗲𝗹𝗽 •••』
-║ *Ytube:* _youtube.com/SuhailTechInfo_
-║ *Owner:* _https://wa.me/923184474176_
+║ *Ytube:* _youtube.com/GlobalTechInfo_
 ║ *Note :*_Don't provide your SESSION_ID to_
 ║ _anyone otherwise that can access chats_
 ╚════════════════════════╝
@@ -144,6 +143,7 @@ SESSION-ID ==> ${Scan_Id}
     } catch (err) {
         console.log(err);
        await fs.emptyDirSync(__dirname+'/auth_info_baileys'); 
+       exec('pm2 restart qasim');
     }
   }
 
@@ -157,6 +157,7 @@ SESSION-ID ==> ${Scan_Id}
   SUHAIL().catch(async(err) => {
     console.log(err)
     await fs.emptyDirSync(__dirname+'/auth_info_baileys'); 
+    exec('pm2 restart qasim');
 
 
     //// MADE WITH 
