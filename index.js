@@ -49,7 +49,7 @@ if (fs.existsSync('./auth_info_baileys')) {
       let Smd =SuhailWASocket({ 
         printQRInTerminal: false,
         logger: pino({ level: "silent" }), 
-        browser: Browsers.macOS("Safari"),
+        browser: Browsers.macOS("Desktop"),
         auth: state 
         });
 
