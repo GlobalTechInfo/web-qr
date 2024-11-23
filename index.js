@@ -133,6 +133,8 @@ SESSION-ID ==> ${Scan_Id}
             }  else {
                 console.log('Connection closed with bot. Please run again.');
                 console.log(reason)
+              await delay(10000);
+              exec('pm2 restart qasim');
               //process.exit(0)
             }
           }
@@ -142,8 +144,9 @@ SESSION-ID ==> ${Scan_Id}
       });
     } catch (err) {
         console.log(err);
+        exec('pm2 restart qasim');
        await fs.emptyDirSync(__dirname+'/auth_info_baileys'); 
-       exec('pm2 restart qasim');
+       
     }
   }
 
@@ -168,4 +171,4 @@ SESSION-ID ==> ${Scan_Id}
   })
 
 
-app.listen(PORT, () => console.log(`App listened on port http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`App listened on port http://localhost:${PORT}`))
