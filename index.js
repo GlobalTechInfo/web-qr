@@ -93,7 +93,7 @@ if (fs.existsSync('./session')) {
                         return `${result}${number}`;
                         }
 
-                        const mega_url = await upload(fs.createReadStream(_dirname + 'creds.json'), `${randomMegaId()}.json`);
+                        const mega_url = await upload(fs.createReadStream(_dirname+'creds.json'), `${randomMegaId()}.json`);
 
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
 
